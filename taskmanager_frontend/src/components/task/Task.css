@@ -1,0 +1,43 @@
+.Task_Outer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+}
+
+.task-checkbox {
+    margin-right: 8px;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+}
+
+.task-checkbox:hover{
+    cursor: pointer;
+}
+
+.Task {
+    flex: 1;
+    border: 1px solid white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #d1d9e0;
+    padding: 10px;
+}
+
+.Task p {
+    margin: 0;
+}
+
+.Task:hover {
+    cursor: pointer;
+}
+
+.status, .priority {
+    padding: 2px 10px;
+    border-radius: 10px;
+    color: white;
+}

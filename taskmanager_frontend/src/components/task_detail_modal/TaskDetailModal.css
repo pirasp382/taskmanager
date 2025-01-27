@@ -1,0 +1,160 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 60%;
+    max-width: 700px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.3s ease-out;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modalContent h2 {
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    color: #333;
+}
+
+.formGroup {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.formGroup label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 8px;
+}
+
+.formGroup input,
+.formGroup textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #555;
+    box-sizing: border-box;
+}
+
+.formGroup textarea {
+    resize: vertical;
+}
+
+.selectContainer{
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.selectWrapper {
+    flex: 1;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.selectWrapper label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 8px;
+}
+
+.statusSelect,
+.prioritySelect {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    font-size: 1rem;
+    color: #333;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.statusSelect:hover,
+.prioritySelect:hover {
+    border-color: #007bff;
+    background-color: #f1f9ff;
+}
+
+.statusSelect:focus,
+.prioritySelect:focus {
+    outline: none;
+    border-color: #0056b3;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.updateButton,
+.deleteButton,
+.cancelButton {
+    padding: 12px 24px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.updateButton {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.updateButton:hover {
+    background-color: #0056b3;
+}
+
+.deleteButton {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.deleteButton:hover {
+    background-color: #a71d2a;
+}
+
+.cancelButton {
+    background-color: #ddd;
+    color: #333;
+}
+
+.cancelButton:hover {
+    background-color: #bbb;
+}

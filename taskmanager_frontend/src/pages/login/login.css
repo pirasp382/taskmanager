@@ -1,0 +1,111 @@
+:root{
+    --primary-color: #007bff;
+    --secundary-color: #6c757d;
+    --third-color: #28a745;
+    --white: #fff;
+    --error: #F00018
+}
+
+body{
+    font-family: Arial, "Helvetica", sans-serif;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
+}
+
+.login{
+    background-color: white;
+    width: 100%;
+}
+
+form{
+    border: 3px solid #f1f1f1;
+}
+
+input[type=text], input[type=password]{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+button{
+    background-color: var(--third-color);
+    color: var(--white);
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover{
+    opacity: 0.8;
+}
+
+.error{
+    color: var(--error);
+}
+
+.container{
+    padding: 16px;
+}
+
+.imgcontainer {
+    text-align: center;
+    margin: 24px 0 12px 0;
+}
+
+img.avatar {
+    width: 20%;
+    border-radius: 50%;
+}
+
+.forgot{
+    background-color:#f1f1f1
+}
+
+span.psw{
+    float: right;
+    padding-top: 16px;
+}
+
+.password-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.password-container input {
+    flex: 1;
+    padding-right: 60px; /* Platz für den Button */
+}
+
+.toggle-password {
+    width: min-content;
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px;
+}
+
+.toggle-password:hover {
+    text-decoration: underline;
+}
+
+header{
+    padding-left: 10%;
+}
+
+@media screen and (max-width: 300px) {
+    span.psw{
+        display: block;
+        float: none;
+    }
+}

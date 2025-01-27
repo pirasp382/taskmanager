@@ -1,0 +1,141 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Etwas dunklerer Overlay-Hintergrund */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: #ffffff;
+    padding: 30px; /* Mehr Polsterung */
+    border-radius: 12px; /* Abgerundetere Ecken */
+    width: 60%; /* Größeres Modal */
+    max-width: 700px;
+    height: auto; /* Automatische Höhe */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Stärkerer Schatten */
+    text-align: center;
+    overflow-y: auto; /* Scrollbar für größere Inhalte */
+    font-family: 'Arial', sans-serif;
+    animation: slideDown 0.3s ease-out; /* Sanfter Slide-Down-Effekt */
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modalContent h2 {
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    color: #333;
+}
+
+.modalContent input,
+.modalContent textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #555;
+    box-sizing: border-box;
+}
+
+.modalContent textarea {
+    resize: vertical;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px; /* Mehr Abstand zwischen den Buttons */
+}
+
+.submitButton {
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+    background-color: #0056b3;
+}
+
+.cancelButton {
+    padding: 12px 24px;
+    background-color: #ddd;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.cancelButton:hover {
+    background-color: #bbb;
+}
+
+/* Styling für die SelectWrapper */
+.selectWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 48%;
+}
+
+.selectRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 4%; /* Abstand zwischen den Selects */
+    margin-bottom: 20px;
+}
+
+.selectWrapper label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #444;
+}
+
+.statusSelect,
+.prioritySelect {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    font-size: 1rem;
+    color: #333;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.statusSelect:hover,
+.prioritySelect:hover {
+    border-color: #007bff;
+    background-color: #f1f9ff;
+}
+
+.statusSelect:focus,
+.prioritySelect:focus {
+    outline: none;
+    border-color: #0056b3;
+}

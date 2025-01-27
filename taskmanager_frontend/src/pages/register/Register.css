@@ -1,0 +1,49 @@
+:root{
+    --primary-color: #007bff;
+    --secundary-color: #6c757d;
+    --third-color: #28a745;
+    --white: #fff;
+    --error: #F00018
+}
+
+body{
+    font-family: Arial, "Helvetica", sans-serif;
+    /*background-image: url("backgroundpage.jpeg");*/
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
+}
+
+form{
+    border: 3px solid #f1f1f1;
+}
+
+.field-icon {
+    float: right;
+    margin-left: -20px;
+    margin-top: -40px;
+    position: relative;
+    z-index: 2;
+}
+
+input[type=text], input[type=password], input[type=email], textarea{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+input.error {
+    border: 2px solid var(--error);
+}
+input.success {
+    border: 2px solid var(--third-color);
+}
+
+
+.signup{
+    background-color: white;
+    width: 100%;
+}

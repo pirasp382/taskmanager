@@ -1,0 +1,63 @@
+@startuml
+!define primary_key(x) <color:blue><b>x</b></color>
+!define primary_key(x, y) <color:blue><b>x, y</b></color>
+!define foreign_key(x) <color:green><i>x</i></color>
+
+entity Status {
+    primary_key(id): BIGINT
+    title: VARCHAR(255)
+    color: VARCHAR(255)
+}
+
+entity Priority {
+    primary_key(id): BIGINT
+    title: VARCHAR(255)
+    color: VARCHAR(255)
+}
+
+entity User {
+    primary_key(id): BIGINT
+    username: VARCHAR(255)
+    password: VARCHAR(255)
+    fullname: VARCHAR(255)
+    bio: TEXT
+    avatarUrl: VARCHAR(255)
+    lastLogin: DATETIME
+    createdAt: DATETIME
+    email: VARCHAR(255)
+}
+
+entity UserStatus {
+    foreign_key(userId): BIGINT
+    foreign_key(statusId): BIGINT
+    primary_key(userId, statusId)
+}
+
+entity UserPriority {
+    foreign_key(userId): BIGINT
+    foreign_key(priorityId): BIGINT
+    primary_key(userId, priorityId)
+}
+
+entity Task {
+    primary_key(id): BIGINT
+    title: VARCHAR(255)
+    description: TEXT
+    createdDate: DATETIME
+    lastUpdate: DATETIME
+    foreign_key(userId): BIGINT
+    foreign_key(statusId): BIGINT
+    foreign_key(priorityId): BIGINT
+}
+
+' Beziehungen zwischen den Tabellen
+User ||--o{ UserStatus : "userId"
+Status ||--o{ UserStatus : "statusId"
+
+User ||--o{ UserPriority : "userId"
+Priority ||--o{ UserPriority : "priorityId"
+
+User ||--o{ Task : "userId"
+Status ||--o{ Task : "statusId"
+Priority ||--o{ Task : "priorityId"
+@enduml

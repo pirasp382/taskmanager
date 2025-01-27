@@ -1,0 +1,15 @@
+.mainContent{
+    text-align: center;
+}
+
+.dashboard {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+
+.charts{
+    padding-top: 5%;
+    padding-left: 10%;
+    display: flex;
+}
