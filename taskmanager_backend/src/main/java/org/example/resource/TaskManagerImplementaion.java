@@ -4,7 +4,6 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.smallrye.jwt.auth.principal.JWTParser;
 import io.smallrye.jwt.auth.principal.ParseException;
 import jakarta.inject.Inject;
-import jakarta.persistence.metamodel.SingularAttribute;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.PathParam;
@@ -22,12 +21,9 @@ import org.example.services.validation.RegistrationValidation;
 import org.example.services.validation.TaskValidation;
 import org.example.services.validation.TokenValidation;
 import org.example.util.Util;
-import org.hibernate.type.EntityType;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class TaskManagerImplementaion implements TaskManager {
 
@@ -62,14 +58,16 @@ public class TaskManagerImplementaion implements TaskManager {
     return Response.accepted(loginOutput).build();
   }
 
-  public Response getUserData(@HeaderParam("Authorization") final String authHeader) throws ParseException{
+  public Response getUserData(@HeaderParam("Authorization") final String authHeader)
+      throws ParseException {
     final List<Message> errorList = tokenValidation.validateToken(authHeader);
     if (!errorList.isEmpty()) {
       return Response.ok(errorList).build();
     }
     final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
     final var user = userRepository.findByName(token.getClaim("username"));
-    final var userData = UserData.builder()
+    final var userData =
+        UserData.builder()
             .username(user.getUsername())
             .fullname(user.getFullname())
             .email(user.getEmail())
