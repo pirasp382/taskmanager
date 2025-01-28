@@ -1,6 +1,5 @@
 package org.example.resource;
 
-import io.smallrye.jwt.auth.principal.ParseException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -66,7 +65,7 @@ public interface TaskManager {
   @Operation(
       summary = "get user data",
       description = "get all the user data from the database to the frontend")
-  Response getUserData(@HeaderParam("Authorization") final String authHeader) throws ParseException;
+  Response getUserData(@HeaderParam("Authorization") final String authHeader);
 
   @Path("/editProfile")
   @PUT
@@ -86,8 +85,7 @@ public interface TaskManager {
       content = @Content(schema = @Schema(type = SchemaType.ARRAY, implementation = List.class)))
   @Transactional
   Response editUser(
-      @HeaderParam("Authorization") final String authHeader, final UpdateProfile profile)
-      throws ParseException;
+      @HeaderParam("Authorization") final String authHeader, final UpdateProfile profile);
 
   @Path("/task")
   @GET
@@ -104,7 +102,7 @@ public interface TaskManager {
       description = "Invalid or missing input data",
       content = @Content(schema = @Schema(type = SchemaType.ARRAY, implementation = List.class)))
   @Transactional
-  Response getAllTasks(@HeaderParam("Authorization") final String authHeader) throws ParseException;
+  Response getAllTasks(@HeaderParam("Authorization") final String authHeader);
 
   @Path("/task/tasks/{id}")
   @GET
@@ -123,8 +121,7 @@ public interface TaskManager {
       content = @Content(schema = @Schema(type = SchemaType.ARRAY, implementation = List.class)))
   @Transactional
   Response getTaskById(
-      @HeaderParam("Authorization") final String authHeader, @PathParam("id") final long id)
-      throws ParseException;
+      @HeaderParam("Authorization") final String authHeader, @PathParam("id") final long id);
 
   @Path("/task")
   @POST
@@ -140,21 +137,18 @@ public interface TaskManager {
       description = "Invalid or missing input data",
       content = @Content(schema = @Schema(type = SchemaType.ARRAY, implementation = List.class)))
   @Transactional
-  Response addTask(@HeaderParam("Authorization") final String authHeader, final Task task)
-      throws ParseException;
+  Response addTask(@HeaderParam("Authorization") final String authHeader, final Task task);
 
   @Path("/task/sort")
   @GET
   Response getTasksSorted(
       @HeaderParam("Authorization") final String authHeader,
       @QueryParam("sorted") final String sortValue,
-      @QueryParam("direction") final boolean direction)
-      throws ParseException;
+      @QueryParam("direction") final boolean direction);
 
   @Path("/dashboard/pie")
   @GET
   Response hello(
       @HeaderParam("Authorization") final String authHeader,
-      @QueryParam("countByValue") final String countByValue)
-      throws ParseException;
+      @QueryParam("countByValue") final String countByValue);
 }

@@ -34,6 +34,15 @@ public class TaskManagerImplementaion implements TaskManager {
   final UserEntiyMapper mapper = new UserEntiyMapper();
   final TaskRepository taskRepository = new TaskRepository();
 
+  private Long getUserIdFromToken(final String authHeader) {
+    try {
+      final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
+      return Long.parseLong(token.getSubject());
+    } catch (final ParseException exception) {
+      return -1L;
+    }
+  }
+
   @Transactional
   public Response registerUser(final User user) {
     final List<Message> errorList = RegistrationValidation.validate(user);
@@ -59,14 +68,12 @@ public class TaskManagerImplementaion implements TaskManager {
     return Response.accepted(loginOutput).build();
   }
 
-  public Response getUserData(@HeaderParam("Authorization") final String authHeader)
-      throws ParseException {
+  public Response getUserData(@HeaderParam("Authorization") final String authHeader) {
     final List<Message> errorList = tokenValidation.validateToken(authHeader);
     if (!errorList.isEmpty()) {
       return Response.ok(errorList).build();
     }
-    final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
-    final var user = userRepository.findByUserID(Long.parseLong(token.getSubject()));
+    final var user = userRepository.findByUserID(getUserIdFromToken(authHeader));
     final var userData =
         UserData.builder()
             .username(user.getUsername())
@@ -79,14 +86,12 @@ public class TaskManagerImplementaion implements TaskManager {
 
   @Transactional
   public Response editUser(
-      @HeaderParam("Authorization") final String authHeader, final UpdateProfile profile)
-      throws ParseException {
+      @HeaderParam("Authorization") final String authHeader, final UpdateProfile profile) {
     final List<Message> errorList = tokenValidation.validateToken(authHeader);
     if (!errorList.isEmpty()) {
       return Response.ok(errorList).build();
     }
-    final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
-    final var user = userRepository.findByUserID(Long.parseLong(token.getSubject()));
+    final var user = userRepository.findByUserID(getUserIdFromToken(authHeader));
     if (profile.getUsername() != null) {
       user.setUsername(profile.getUsername());
     }
@@ -110,14 +115,12 @@ public class TaskManagerImplementaion implements TaskManager {
     return Response.ok(userOutput).build();
   }
 
-  public Response getAllTasks(@HeaderParam("Authorization") final String authHeader)
-      throws ParseException {
+  public Response getAllTasks(@HeaderParam("Authorization") final String authHeader) {
     final List<Message> errorList = tokenValidation.validateToken(authHeader);
     if (!errorList.isEmpty()) {
       return Response.ok(errorList).build();
     }
-    final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
-    final var user = userRepository.findByUserID(Long.parseLong(token.getSubject()));
+    final var user = userRepository.findByUserID(getUserIdFromToken(authHeader));
     final var taskList =
         taskRepository.getAllTasksByUserId(user).stream().map(TaskEntityMapper::mapToTask).toList();
     final UserOutput userOutput = UserOutput.builder().taskList(taskList).build();
@@ -125,14 +128,12 @@ public class TaskManagerImplementaion implements TaskManager {
   }
 
   public Response getTaskById(
-      @HeaderParam("Authorization") final String authHeader, @PathParam("id") final long id)
-      throws ParseException {
+      @HeaderParam("Authorization") final String authHeader, @PathParam("id") final long id) {
     final List<Message> errorList = tokenValidation.validateToken(authHeader);
     if (!errorList.isEmpty()) {
       return Response.ok(errorList).build();
     }
-    final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
-    final var user = userRepository.findByUserID(Long.parseLong(token.getSubject()));
+    final var user = userRepository.findByUserID(getUserIdFromToken(authHeader));
     final var task =
         taskRepository.getTaskByIdAndUserId(id, user).stream()
             .map(TaskEntityMapper::mapToTask)
@@ -141,14 +142,12 @@ public class TaskManagerImplementaion implements TaskManager {
   }
 
   @Transactional
-  public Response addTask(@HeaderParam("Authorization") final String authHeader, final Task task)
-      throws ParseException {
+  public Response addTask(@HeaderParam("Authorization") final String authHeader, final Task task) {
     final List<Message> errorList = tokenValidation.validateToken(authHeader);
     if (!errorList.isEmpty()) {
       return Response.ok(errorList).build();
     }
-    final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
-    final var user = userRepository.findByUserID(Long.parseLong(token.getSubject()));
+    final var user = userRepository.findByUserID(getUserIdFromToken(authHeader));
     final TaskEntity taskEntity = TaskEntityMapper.mapToTaskEntity(task, user);
     taskEntity.persist();
     final Task resultTask = TaskEntityMapper.mapToTask(taskEntity);
@@ -158,8 +157,7 @@ public class TaskManagerImplementaion implements TaskManager {
   public Response getTasksSorted(
       @HeaderParam("Authorization") final String authHeader,
       @QueryParam("sorted") final String sortValue,
-      @QueryParam("ascending") final boolean direction)
-      throws ParseException {
+      @QueryParam("ascending") final boolean direction) {
     final List<Message> errorList = tokenValidation.validateToken(authHeader);
     if (!errorList.isEmpty()) {
       return Response.ok(errorList).build();
@@ -168,8 +166,7 @@ public class TaskManagerImplementaion implements TaskManager {
       errorList.add(Message.builder().title("Sortparamter invalid").build());
       return Response.ok(errorList).build();
     }
-    final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
-    final var user = userRepository.findByUserID(Long.parseLong(token.getSubject()));
+    final var user = userRepository.findByUserID(getUserIdFromToken(authHeader));
     final var result =
         taskRepository.getSortedTaskList(user, sortValue, direction).stream()
             .map(TaskEntityMapper::mapToTask)
@@ -179,8 +176,7 @@ public class TaskManagerImplementaion implements TaskManager {
 
   public Response hello(
       @HeaderParam("Authorization") final String authHeader,
-      @QueryParam("countByValue") final String countByValue)
-      throws ParseException {
+      @QueryParam("countByValue") final String countByValue) {
     final List<Message> errorList = tokenValidation.validateToken(authHeader);
     if (!errorList.isEmpty()) {
       return Response.ok(errorList).build();
@@ -189,8 +185,7 @@ public class TaskManagerImplementaion implements TaskManager {
       errorList.add(Message.builder().title("Sortparamter invalid").build());
       return Response.ok(errorList).build();
     }
-    final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
-    final var user = userRepository.findByUserID(Long.parseLong(token.getSubject()));
+    final var user = userRepository.findByUserID(getUserIdFromToken(authHeader));
     final List<TasksDetail> result =
         (countByValue.equals("status"))
             ? taskRepository.getTasksCountByStatus(user)
