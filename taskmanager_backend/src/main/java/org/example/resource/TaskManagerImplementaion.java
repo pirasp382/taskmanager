@@ -62,6 +62,22 @@ public class TaskManagerImplementaion implements TaskManager {
     return Response.accepted(loginOutput).build();
   }
 
+  public Response getUserData(@HeaderParam("Authorization") final String authHeader) throws ParseException{
+    final List<Message> errorList = tokenValidation.validateToken(authHeader);
+    if (!errorList.isEmpty()) {
+      return Response.ok(errorList).build();
+    }
+    final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
+    final var user = userRepository.findByName(token.getClaim("username"));
+    final var userData = UserData.builder()
+            .username(user.getUsername())
+            .fullname(user.getFullname())
+            .email(user.getEmail())
+            .bio(user.getBio())
+            .build();
+    return Response.ok(userData).build();
+  }
+
   public Response editUser(
       @HeaderParam("Authorization") final String authHeader, final UpdateProfile profile)
       throws ParseException {

@@ -59,6 +59,15 @@ public interface TaskManager {
   @Transactional
   Response login(final LoginInput input);
 
+  @Path("/getUserData")
+  @GET
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Operation(
+      summary = "get user data",
+      description = "get all the user data from the database to the frontend")
+  Response getUserData(@HeaderParam("Authorization") final String authHeader) throws ParseException;
+
   @Path("/editProfile")
   @PUT
   @Consumes(MediaType.APPLICATION_JSON)
