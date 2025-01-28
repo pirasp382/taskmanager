@@ -49,7 +49,8 @@ public class TaskManagerImplementaion implements TaskManager {
   public Response login(final LoginInput input) {
     final List<Message> errorList = LoginValidation.validate(input);
     if (!errorList.isEmpty()) {
-      return Response.ok(errorList).build();
+      final LoginOutput loginOutput = LoginOutput.builder().errorlist(errorList).build();
+      return Response.ok(loginOutput).build();
     }
     final var user = userRepository.findByName(input.getUsername());
     user.setLastLogin(LocalDateTime.now());
@@ -65,7 +66,7 @@ public class TaskManagerImplementaion implements TaskManager {
       return Response.ok(errorList).build();
     }
     final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
-    final var user = userRepository.findByName(token.getClaim("username"));
+    final var user = userRepository.findByUserID(Long.parseLong(token.getSubject()));
     final var userData =
         UserData.builder()
             .username(user.getUsername())
@@ -76,6 +77,7 @@ public class TaskManagerImplementaion implements TaskManager {
     return Response.ok(userData).build();
   }
 
+  @Transactional
   public Response editUser(
       @HeaderParam("Authorization") final String authHeader, final UpdateProfile profile)
       throws ParseException {
@@ -84,7 +86,7 @@ public class TaskManagerImplementaion implements TaskManager {
       return Response.ok(errorList).build();
     }
     final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
-    final var user = userRepository.findByName(token.getClaim("username"));
+    final var user = userRepository.findByUserID(Long.parseLong(token.getSubject()));
     if (profile.getUsername() != null) {
       user.setUsername(profile.getUsername());
     }
@@ -115,7 +117,7 @@ public class TaskManagerImplementaion implements TaskManager {
       return Response.ok(errorList).build();
     }
     final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
-    final var user = userRepository.findByName(token.getClaim("username"));
+    final var user = userRepository.findByUserID(Long.parseLong(token.getSubject()));
     final var taskList =
         taskRepository.getAllTasksByUserId(user).stream().map(TaskEntityMapper::mapToTask).toList();
     final UserOutput userOutput = UserOutput.builder().taskList(taskList).build();
@@ -130,7 +132,7 @@ public class TaskManagerImplementaion implements TaskManager {
       return Response.ok(errorList).build();
     }
     final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
-    final var user = userRepository.findByName(token.getClaim("username"));
+    final var user = userRepository.findByUserID(Long.parseLong(token.getSubject()));
     final var task =
         taskRepository.getTaskByIdAndUserId(id, user).stream()
             .map(TaskEntityMapper::mapToTask)
@@ -146,7 +148,7 @@ public class TaskManagerImplementaion implements TaskManager {
       return Response.ok(errorList).build();
     }
     final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
-    final var user = userRepository.findByName(token.getClaim("username"));
+    final var user = userRepository.findByUserID(Long.parseLong(token.getSubject()));
     final TaskEntity taskEntity = TaskEntityMapper.mapToTaskEntity(task, user);
     taskEntity.persist();
     final Task resultTask = TaskEntityMapper.mapToTask(taskEntity);
@@ -167,7 +169,7 @@ public class TaskManagerImplementaion implements TaskManager {
       return Response.ok(errorList).build();
     }
     final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
-    final var user = userRepository.findByName(token.getClaim("username"));
+    final var user = userRepository.findByUserID(Long.parseLong(token.getSubject()));
     final var result =
         taskRepository.getSortedTaskList(user, sortValue, direction).stream()
             .map(TaskEntityMapper::mapToTask)
@@ -188,7 +190,7 @@ public class TaskManagerImplementaion implements TaskManager {
       return Response.ok(errorList).build();
     }
     final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
-    final var user = userRepository.findByName(token.getClaim("username"));
+    final var user = userRepository.findByUserID(Long.parseLong(token.getSubject()));
     final List<TasksDetail> result =
         (countByValue.equals("status"))
             ? taskRepository.getTasksCountByStatus(user)
