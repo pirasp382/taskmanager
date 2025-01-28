@@ -10,7 +10,8 @@ import texts from "../../data/texts"
 
 function Sidebar() {
     const navigate = useNavigate()
-    const {language} = useLanguage();
+    const {language} = useLanguage()
+
     function onLogout() {
         localStorage.clear()
         navigate("/login")
@@ -23,7 +24,7 @@ function Sidebar() {
                 <li onClick={() => navigate("/tasks")}>
                     <CiBoxList/> {texts.sidebar.tasks[language]}
                 </li>
-                <li><CiSettings/> {texts.sidebar.settings[language]}</li>
+                <li onClick={() => navigate("/settings")}><CiSettings/> {texts.sidebar.settings[language]}</li>
             </ul>
             <div className={"language-selector"}>
                 <LanguageSelector/>

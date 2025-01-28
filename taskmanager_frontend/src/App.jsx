@@ -4,8 +4,8 @@ import {useEffect, useState} from "react"
 import Tasks from "./pages/tasks/Tasks"
 import Login from "./pages/login/Login"
 import Dashboard from "./pages/dashboard/Dashboard"
-import {useNavigate} from "react-router-dom"
 import Register from "./pages/register/Register"
+import Settings from "./pages/settings/Settings"
 
 
 const PrivateRoute = ({children, isLoggedIn}) => {
@@ -47,8 +47,13 @@ function App() {
                             <Tasks/>
                         </PrivateRoute>
                     }/>
+                    <Route path={"/settings"} element={
+                        <PrivateRoute isLoggedIn={isLoggedIn}>
+                            <Settings/>
+                        </PrivateRoute>
+                    }/>
                     <Route path={"/login"} element={<Login setIsLoggedIn={setIsLoggedIn}/>}/>
-                    <Route path={"/register"} element={<Register setIsLoggedIn={setIsLoggedIn}/> }/>
+                    <Route path={"/register"} element={<Register setIsLoggedIn={setIsLoggedIn}/>}/>
                 </Routes>
             </BrowserRouter>
         </div>
