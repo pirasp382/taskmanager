@@ -42,6 +42,20 @@ function Register({setIsLoggedIn}) {
     function signup_success(data) {
         localStorage.setItem("username", data["username"])
         localStorage.setItem("jwt", data["token"])
+        changeLanguage("english")
+
+        setError("")
+        setIsLoggedIn(true)
+
+    }
+
+    function signup_error(errorlist) {
+        setError(prev => ({...prev, general: errorlist[0]["title"]}))
+    }
+
+    function login_success(data) {
+        localStorage.setItem("username", data["username"])
+        localStorage.setItem("jwt", data["token"])
         localStorage.setItem("status", JSON.stringify(data["statusEntities"]))
         localStorage.setItem("priority", JSON.stringify(data["priorityEntities"]))
         localStorage.setItem("avatarUrl", data["avatarUrl"])
@@ -49,12 +63,30 @@ function Register({setIsLoggedIn}) {
 
         setError("")
         setIsLoggedIn(true)
-        navigate("/tasks")
-
+        navigate("/")
     }
 
-    function signup_error(errorlist) {
-        setError(prev => ({...prev, general: errorlist[0]["title"]}))
+    function login_error(errorlist) {
+        setError(errorlist)
+    }
+
+    function login(e) {
+        e.preventDefault()
+        setLoading(true)
+        const login_url = "http://localhost:8000/login"
+        axios
+            .post(login_url, {
+                username: username,
+                password: password,
+            })
+            .then((response) => response.data)
+            .then((data) =>
+                data["errorlist"].length === 0
+                    ? login_success(data)
+                    : login_error(data["errorlist"]),
+            )
+            .catch((error) => setError(error))
+            .finally(() => setLoading(false))
     }
 
     function submit(e) {
@@ -72,6 +104,7 @@ function Register({setIsLoggedIn}) {
             })
                 .then(response => response.data)
                 .then(data => data["errorlist"].length === 0 ? signup_success(data) : signup_error(data["errorlist"]))
+                .then(() => login(e))
                 .catch(error => console.error(error))
                 .finally(() => setLoading(false))
         }

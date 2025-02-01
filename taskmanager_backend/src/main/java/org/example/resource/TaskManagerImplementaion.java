@@ -51,8 +51,12 @@ public class TaskManagerImplementaion implements TaskManager {
     }
     final var userEntity = mapper.mapToUserEntityRegistration(user);
     new UserRepository().persist(userEntity);
-    final var loginOutput = mapper.mapToLoginOutput(userEntity);
-    return Response.ok(loginOutput).build();
+    final RegistrationOutput registrationOutput =
+        RegistrationOutput.builder()
+            .username(userEntity.getUsername())
+            .token(Util.createToken(userEntity))
+            .build();
+    return Response.ok(registrationOutput).build();
   }
 
   public Response login(final LoginInput input) {
