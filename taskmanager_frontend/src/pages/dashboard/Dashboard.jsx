@@ -28,10 +28,9 @@ function Dashboard() {
         })
             .then(response => response.data)
             .then(data=>{
-                console.log(data);
-                return data;
+                (countParam === "status") ? setStatusDate(data.tasksDetails) : setPriorityData(data.tasksDetails)
+                localStorage.setItem("jwt", data.token)
             })
-            .then(data => (countParam === "status") ? setStatusDate(data) : setPriorityData(data))
             .catch(error => console.error(error))
     }
 

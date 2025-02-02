@@ -208,7 +208,9 @@ public class TaskManagerImplementaion implements TaskManager {
         (countByValue.equals("status"))
             ? taskRepository.getTasksCountByStatus(user)
             : taskRepository.getTasksCountByPriority(user);
-    return Response.ok(result).build();
+    final TaskDetailOutput taskDetailOutput =
+        TaskDetailOutput.builder().tasksDetails(result).token(Util.createToken(user)).build();
+    return Response.ok(taskDetailOutput).build();
   }
 
   @Transactional
