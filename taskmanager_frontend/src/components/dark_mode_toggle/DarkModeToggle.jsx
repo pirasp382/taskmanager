@@ -1,4 +1,6 @@
-import {useDarkMode} from "../dark_mode_context/DarkModeContext" // Kontext importieren
+import {useDarkMode} from "../dark_mode_context/DarkModeContext"
+import {CiSun} from "react-icons/ci"
+import {FiMoon} from "react-icons/fi"
 import "./DarkModeToggle.css"
 
 export default function DarkModeToggle() {
@@ -6,10 +8,11 @@ export default function DarkModeToggle() {
 
     return (
         <button
-            onClick={() => toggleDarkMode(!darkMode)} // Toggle über den Kontext
+            onClick={() => toggleDarkMode(!darkMode)}
             className="dark-mode-toggle-btn"
         >
-            {darkMode ? "🌙 Dark Mode" : "☀️ Light Mode"}
+            {darkMode ? <div className={"icon_field"}><FiMoon className={"icon"}/> <p>Dark Mode</p></div> :
+                <div className={"icon_field"}><CiSun className={"icon"}/><p>Light Mode</p></div>}
         </button>
     )
 }
