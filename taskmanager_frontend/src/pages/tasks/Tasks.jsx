@@ -15,7 +15,7 @@ function Tasks() {
     const [singleTask, setSingleTask] = useState("")
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [showSingleTaskModal, setShowSingleTaskModal] = useState(false)
-    const {language} = useLanguage();
+    const {language} = useLanguage()
 
     useEffect(() => {
         getAllTasks()
@@ -31,7 +31,10 @@ function Tasks() {
             },
         })
             .then(response => response.data)
-            .then(data => setTasks(data["taskList"]))
+            .then(data => {
+                setTasks(data["taskList"])
+                localStorage.setItem("jwt", data.token)
+            })
             .catch(error => console.log(error))
 
     }
@@ -54,6 +57,7 @@ function Tasks() {
             },
         })
             .then(response => response.data)
+            .then(data => localStorage.setItem("jwt", data.token))
             .catch(error => console.log(error))
             .finally(() => getAllTasks())
     }
@@ -76,6 +80,7 @@ function Tasks() {
             },
         })
             .then(response => response.data)
+            .then(data => localStorage.setItem("jwt", data.token))
             .catch(error => console.error(error))
             .finally(() => getAllTasks())
     }
@@ -89,7 +94,10 @@ function Tasks() {
             },
         })
             .then(response => response.data)
-            .then(data => setSingleTask(data[0]))
+            .then(data => {
+                setSingleTask(data.taskList[0])
+                localStorage.setItem("jwt", data.token)
+            })
             .then(() => setShowSingleTaskModal(true))
             .catch(error => console.error(error))
     }
@@ -116,7 +124,10 @@ function Tasks() {
             },
         })
             .then(response => response.data)
-            .then(data => setTasks(data))
+            .then(data => {
+                setTasks(data.taskList)
+                localStorage.setItem("jwt", data.token)
+            })
             .catch(error => console.error(error))
     }
 

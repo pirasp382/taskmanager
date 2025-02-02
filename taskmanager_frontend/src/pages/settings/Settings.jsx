@@ -1,7 +1,6 @@
 import Sidebar from "../../components/sidebar/Sidebar"
 import "./Settings.css"
 import {useLanguage} from "../../components/language_context/LanguageContext"
-import {data, useNavigate} from "react-router-dom"
 import {useEffect, useState} from "react"
 import axios from "axios"
 
@@ -38,17 +37,20 @@ function Settings() {
                 },
             })
             .then((response) => response.data)
-            .then((data) => fillUserData(data))
+            .then((data) => {
+                fillUserData(data)
+                localStorage.setItem("jwt", data.token)
+            })
             .catch((error) => console.log())
     }
 
-    function editSuccessful(data){
-        localStorage.setItem("username", data.username);
-        localStorage.setItem("jwt", data.token);
+    function editSuccessful(data) {
+        localStorage.setItem("username", data.username)
+        localStorage.setItem("jwt", data.token)
     }
 
-    function editError(data){
-        localStorage.setItem("jwt", data.token);
+    function editError(data) {
+        localStorage.setItem("jwt", data.token)
     }
 
     function editProfile(e) {
@@ -72,13 +74,13 @@ function Settings() {
                 },
             )
             .then((response) => response.data)
-            .then((data) => data.errorlist.length ===0
-            ?editSuccessful(data)
-            :editError(data))
+            .then((data) => data.errorlist.length === 0
+                ? editSuccessful(data)
+                : editError(data))
             .catch((error) => {
                 console.log("error")
             })
-            .finally(()=>setLoading(false))
+            .finally(() => setLoading(false))
     }
 
     return (

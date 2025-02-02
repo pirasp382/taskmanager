@@ -27,6 +27,10 @@ function Dashboard() {
             },
         })
             .then(response => response.data)
+            .then(data=>{
+                console.log(data);
+                return data;
+            })
             .then(data => (countParam === "status") ? setStatusDate(data) : setPriorityData(data))
             .catch(error => console.error(error))
     }
