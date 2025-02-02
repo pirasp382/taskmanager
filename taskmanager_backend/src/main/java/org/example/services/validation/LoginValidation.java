@@ -21,11 +21,18 @@ public class LoginValidation {
     if (isNullOrEmpty(input.getPassword())) {
       errorList.add(Message.builder().title("password is null").build());
     }
+    if(userDoesNotExists(input.getUsername())){
+      errorList.add(Message.builder().title("user does not exists").build());
+    }
     if (errorList.isEmpty() && wrongCredentials(input.getUsername(), input.getPassword())) {
       errorList.add(Message.builder().title("wrong credentials").build());
     }
 
     return errorList;
+  }
+
+  private static boolean userDoesNotExists(final String username){
+    return userRepository.findByName(username) == null;
   }
 
   private static boolean isNullOrEmpty(final String input) {
