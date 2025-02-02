@@ -5,9 +5,7 @@ import io.smallrye.jwt.auth.principal.JWTParser;
 import io.smallrye.jwt.auth.principal.ParseException;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.HeaderParam;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.example.dto.*;
@@ -21,6 +19,8 @@ import org.example.util.Util;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class TaskManagerImplementaion implements TaskManager {
 
@@ -202,5 +202,63 @@ public class TaskManagerImplementaion implements TaskManager {
             ? taskRepository.getTasksCountByStatus(user)
             : taskRepository.getTasksCountByPriority(user);
     return Response.ok(result).build();
+  }
+
+  @Transactional
+  public Response deleteTask(
+      @HeaderParam("Authorization") final String authHeader, @PathParam("id") final long id)
+      throws ParseException {
+    final List<Message> errorList = tokenValidation.validateToken(authHeader);
+    if (!errorList.isEmpty()) {
+      return Response.ok(errorList).build();
+    }
+    final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
+    final var user = userRepository.findByName(token.getClaim("username"));
+    final List<TaskEntity> taskEntityList = taskRepository.getTaskByIdAndUserId(id, user);
+    if (taskEntityList.isEmpty()) {
+      errorList.add(Message.builder().title("Task does not exists").build());
+      return Response.ok(errorList).build();
+    }
+    final String result =
+        (taskRepository.deleteById(id, user) == 1L
+            ? "task sucessfully deleted"
+            : "task could not get deleted");
+    return Response.ok(Map.of("message", result)).build();
+  }
+
+  @Transactional
+  public Response updateTask(
+          @HeaderParam("Authorization") final String authHeader,
+          @PathParam("id") final long id,
+          final UpdateTask task)
+          throws ParseException {
+    final List<Message> errorList = tokenValidation.validateToken(authHeader);
+    if (!errorList.isEmpty()) {
+      return Response.ok(errorList).build();
+    }
+    final JsonWebToken token = parser.parseOnly(authHeader.substring("Bearer:".length()).trim());
+    final var user = userRepository.findByName(token.getClaim("username"));
+    final List<TaskEntity> taskEntityList = taskRepository.getTaskByIdAndUserId(id, user);
+    if (taskEntityList.isEmpty()) {
+      errorList.add(Message.builder().title("Task does not exists").build());
+      return Response.ok(errorList).build();
+    }
+    final TaskEntity taskEntity = taskEntityList.getFirst();
+    if (task.getTitle() != null && !task.getTitle().isEmpty()) {
+      taskEntity.setTitle(task.getTitle());
+    }
+    if (task.getDescription() != null) {
+      taskEntity.setDescription(task.getDescription());
+    }
+    if (task.getStatus().getTitle() != null) {
+      taskEntity.setStatus(TaskEntityMapper.getStatusEntity(task.getStatus()));
+    }
+    if (task.getPriority().getTitle() != null) {
+      taskEntity.setPriority(TaskEntityMapper.getPriorityEntity(task.getPriority()));
+    }
+    taskEntity.setLastUpdate(LocalDateTime.now());
+    taskEntity.persist();
+    final Task resultTask = TaskEntityMapper.mapToTask(taskEntity);
+    return Response.ok(resultTask).build();
   }
 }

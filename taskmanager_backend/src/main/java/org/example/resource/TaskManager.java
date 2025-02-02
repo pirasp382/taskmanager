@@ -1,5 +1,6 @@
 package org.example.resource;
 
+import io.smallrye.jwt.auth.principal.ParseException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -145,6 +146,22 @@ public interface TaskManager {
       @HeaderParam("Authorization") final String authHeader,
       @QueryParam("sorted") final String sortValue,
       @QueryParam("direction") final boolean direction);
+
+  @Path("/task/{id}")
+  @DELETE
+  @Transactional
+  Response deleteTask(
+      @HeaderParam("Authorization") final String authHeader, @PathParam("id") final long id)
+      throws ParseException;
+
+  @Path("/task/{id}")
+  @PUT
+  @Transactional
+  Response updateTask(
+      @HeaderParam("Authorization") final String authHeader,
+      @PathParam("id") final long id,
+      final UpdateTask task)
+      throws ParseException;
 
   @Path("/dashboard/pie")
   @GET
