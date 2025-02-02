@@ -5,6 +5,7 @@ import axios from "axios"
 import {useEffect, useState} from "react"
 import texts from "../../data/texts"
 import {useLanguage} from "../../components/language_context/LanguageContext"
+import DarkModeToggle from "../../components/dark_mode_toggle/DarkModeToggle"
 
 
 function Dashboard() {
@@ -27,7 +28,7 @@ function Dashboard() {
             },
         })
             .then(response => response.data)
-            .then(data=>{
+            .then(data => {
                 (countParam === "status") ? setStatusDate(data.tasksDetails) : setPriorityData(data.tasksDetails)
                 localStorage.setItem("jwt", data.token)
             })
@@ -37,6 +38,9 @@ function Dashboard() {
     return (
         <div className={"dashboard"}>
             <Sidebar/>
+            <div className={"dark_mode_toggle"}>
+                <DarkModeToggle/>
+            </div>
             <div className="mainContent">
                 <div>
                     <h1>
@@ -45,7 +49,8 @@ function Dashboard() {
                 </div>
                 <div className={"charts"}>
                     <PieChart id={"status"} taskData={statusData} title={texts.dashboard.tasksByStatus[language]}/>
-                    <PieChart id={"priority"} taskData={priorityData} title={texts.dashboard.tasksByPriority[language]}/>
+                    <PieChart id={"priority"} taskData={priorityData}
+                              title={texts.dashboard.tasksByPriority[language]}/>
                 </div>
             </div>
         </div>

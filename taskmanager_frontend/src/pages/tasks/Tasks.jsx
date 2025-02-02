@@ -8,6 +8,7 @@ import TaskDetailModal from "../../components/task_detail_modal/TaskDetailModal"
 import {IoMdAddCircleOutline} from "react-icons/io"
 import {useLanguage} from "../../components/language_context/LanguageContext"
 import texts from "../../data/texts"
+import DarkModeToggle from "../../components/dark_mode_toggle/DarkModeToggle"
 
 function Tasks() {
 
@@ -135,6 +136,9 @@ function Tasks() {
         <div className={"homePage"}>
             <Sidebar/>
             <div className="mainContent">
+                <div className={"dark_mode_toggle"}>
+                    <DarkModeToggle/>
+                </div>
                 <button onClick={() => setIsModalOpen(true)} className="openModalButton">
                     <IoMdAddCircleOutline className={"add-icon"}/> {texts.tasks.add_task[language]}
                 </button>

@@ -4,6 +4,12 @@
     height: 100vh; /* Vollständige Höhe des Bildschirms */
 }
 
+.dark_mode_toggle {
+    position: relative;
+    top: 10px;
+    right: 10px;
+}
+
 .tasklist {
     width: 100%; /* 80% der Breite für die Tasklist */
     padding: 20px;
@@ -38,11 +44,15 @@
     background-color: #0056b3;
 }
 
-.openModalButton{
+.openModalButton {
+    align-self: center;
     font-size: 16px;
+    width: 50%;
+    background-color: #007bff;
+    border-radius: 20px;
 }
 
-.add-icon{
+.add-icon {
     width: 16px;
     height: 16px;
 }

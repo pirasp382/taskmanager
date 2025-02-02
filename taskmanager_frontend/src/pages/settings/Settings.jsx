@@ -3,6 +3,7 @@ import "./Settings.css"
 import {useLanguage} from "../../components/language_context/LanguageContext"
 import {useEffect, useState} from "react"
 import axios from "axios"
+import DarkModeToggle from "../../components/dark_mode_toggle/DarkModeToggle"
 
 function Settings() {
     const {language, changeLanguage} = useLanguage()
@@ -86,11 +87,14 @@ function Settings() {
     return (
         <div className="settings">
             <Sidebar/>
+            <div className={"dark_mode_toggle"}>
+                <DarkModeToggle/>
+            </div>
             <div className="main bg-gray-100 p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
                 <div className="title mb-6">
-                    <h2 className="text-3xl font-bold text-blue-600">Edit your Profile</h2>
+                    <h2 className="edit_title text-3xl font-bold text-blue-600">Edit your Profile</h2>
                 </div>
-                <form onSubmit={editProfile}>
+                <form onSubmit={editProfile} className={"edit_form"}>
                     <div className="container grid gap-4">
                         <div>
                             <label htmlFor="uname" className="block text-gray-700 font-medium mb-1">

@@ -1,5 +1,12 @@
-.mainContent{
+.mainContent {
     text-align: center;
+}
+
+.dark_mode_toggle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
 }
 
 .dashboard {
@@ -8,7 +15,7 @@
     height: 100vh;
 }
 
-.charts{
+.charts {
     padding-top: 5%;
     padding-left: 10%;
     display: flex;
