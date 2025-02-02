@@ -1,36 +1,36 @@
-import Sidebar from "../../components/sidebar/Sidebar";
-import "./Settings.css";
-import { useLanguage } from "../../components/language_context/LanguageContext";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import Sidebar from "../../components/sidebar/Sidebar"
+import "./Settings.css"
+import {useLanguage} from "../../components/language_context/LanguageContext"
+import {data, useNavigate} from "react-router-dom"
+import {useEffect, useState} from "react"
+import axios from "axios"
 
 function Settings() {
-    const { language, changeLanguage } = useLanguage();
-    const [username, setUsername] = useState("");
-    const [fullname, setFullname] = useState("");
-    const [bio, setBio] = useState("");
-    const [email, setEmail] = useState("");
-    const [loading, setLoading] = useState(false);
+    const {language, changeLanguage} = useLanguage()
+    const [username, setUsername] = useState("")
+    const [fullname, setFullname] = useState("")
+    const [bio, setBio] = useState("")
+    const [email, setEmail] = useState("")
+    const [loading, setLoading] = useState(false)
     const [error, setError] = useState({
         general: "",
         passwordError: "",
-    });
+    })
 
     useEffect(() => {
-        getUserInfos();
-    }, []);
+        getUserInfos()
+    }, [])
 
     function fillUserData(data) {
-        setUsername(data.username);
-        setFullname(data.fullname);
-        setEmail(data.email);
-        setBio(data.bio);
+        setUsername(data.username)
+        setFullname(data.fullname)
+        setEmail(data.email)
+        setBio(data.bio)
     }
 
     function getUserInfos() {
-        const get_data_url = "http://localhost:8000/getUserData";
-        const token = localStorage.getItem("jwt");
+        const get_data_url = "http://localhost:8000/getUserData"
+        const token = localStorage.getItem("jwt")
         axios
             .get(get_data_url, {
                 headers: {
@@ -39,14 +39,23 @@ function Settings() {
             })
             .then((response) => response.data)
             .then((data) => fillUserData(data))
-            .catch((error) => console.log());
+            .catch((error) => console.log())
+    }
+
+    function editSuccessful(data){
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("jwt", data.token);
+    }
+
+    function editError(data){
+        localStorage.setItem("jwt", data.token);
     }
 
     function editProfile(e) {
-        e.preventDefault();
-        setLoading(true);
-        const edit_profile_url = "http://localhost:8000/editProfile";
-        const token = localStorage.getItem("jwt");
+        e.preventDefault()
+        setLoading(true)
+        const edit_profile_url = "http://localhost:8000/editProfile"
+        const token = localStorage.getItem("jwt")
         axios
             .put(
                 edit_profile_url,
@@ -60,22 +69,21 @@ function Settings() {
                     headers: {
                         Authorization: `Bearer: ${token}`,
                     },
-                }
+                },
             )
             .then((response) => response.data)
-            .then((data) => {
-                console.log(data);
-                setLoading(false);
-            })
+            .then((data) => data.errorlist.length ===0
+            ?editSuccessful(data)
+            :editError(data))
             .catch((error) => {
-                console.log("error");
-                setLoading(false);
-            });
+                console.log("error")
+            })
+            .finally(()=>setLoading(false))
     }
 
     return (
         <div className="settings">
-            <Sidebar />
+            <Sidebar/>
             <div className="main bg-gray-100 p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
                 <div className="title mb-6">
                     <h2 className="text-3xl font-bold text-blue-600">Edit your Profile</h2>
@@ -146,7 +154,7 @@ function Settings() {
                 </form>
             </div>
         </div>
-    );
+    )
 }
 
-export default Settings;
+export default Settings
