@@ -29,7 +29,7 @@ function Login({ setIsLoggedIn }) {
     }
 
     function login_error(errorlist) {
-        setError(errorlist[0]);
+        setError(errorlist);
     }
 
     function submit(e) {
@@ -47,7 +47,7 @@ function Login({ setIsLoggedIn }) {
                     ? login_success(data)
                     : login_error(data["errorlist"])
             )
-            .catch(() => setError("An unexpected error occurred."))
+            .catch((error) => setError(error))
             .finally(() => setLoading(false));
     }
 
@@ -58,9 +58,7 @@ function Login({ setIsLoggedIn }) {
                     <div className={"login-title"}>
                         <h2>Log In</h2>
                     </div>
-                    <div onClick={()=> navigate("/register")}>
-                        register
-                    </div>
+                    <button className={"register-button"} onClick={()=>navigate("/register")}>Register</button>
                 </header>
                 <div className="imgcontainer">
                     <img src={avatar} alt="Avatar" className={"avatar"} />
@@ -93,8 +91,6 @@ function Login({ setIsLoggedIn }) {
                             {showPassword ? "Hide" : "Show"}
                         </button>
                     </div>
-
-                    <p className={"error"} id={"error"}>{error}</p>
                     <button type="submit" disabled={loading}>
                         {loading ? "Logging in..." : "Login"}
                     </button>

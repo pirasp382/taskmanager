@@ -103,6 +103,11 @@ header{
     padding-left: 10%;
 }
 
+.register-button{
+    border-radius: 10px;
+    max-width: min-content;
+}
+
 @media screen and (max-width: 300px) {
     span.psw{
         display: block;
