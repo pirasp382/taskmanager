@@ -3,10 +3,12 @@ import "./Dashboard.css"
 import PieChart from "../../components/pie_chart/PieChart"
 import axios from "axios"
 import {useEffect, useState} from "react"
+import texts from "../../data/texts"
+import {useLanguage} from "../../components/language_context/LanguageContext"
 
 
 function Dashboard() {
-
+    const {language, changeLanguage} = useLanguage()
     const [statusData, setStatusDate] = useState()
     const [priorityData, setPriorityData] = useState()
     const username = localStorage.getItem("username")
@@ -35,12 +37,12 @@ function Dashboard() {
             <div className="mainContent">
                 <div>
                     <h1>
-                        Welcome back {username}
+                        {texts.dashboard.welcome[language]} {username}
                     </h1>
                 </div>
                 <div className={"charts"}>
-                    <PieChart id={"status"} taskData={statusData} title={"Tasks by Status"}/>
-                    <PieChart id={"priority"} taskData={priorityData} title={"Tasks by Priority"}/>
+                    <PieChart id={"status"} taskData={statusData} title={texts.dashboard.tasksByStatus[language]}/>
+                    <PieChart id={"priority"} taskData={priorityData} title={texts.dashboard.tasksByPriority[language]}/>
                 </div>
             </div>
         </div>

@@ -46,6 +46,23 @@ const texts = {
             french: "Annuler",
         },
     },
+    dashboard: {
+        welcome: {
+            english: "Welcome back",
+            german: "Hallo",
+            french: "Salute",
+        },
+        tasksByPriority: {
+            english: "Tasks by Priority",
+            german: "Aufgaben nach Priorität",
+            french: "tâches par priorité",
+        },
+        tasksByStatus: {
+            english: "Tasks by Status",
+            german: "Aufgaben nach Status",
+            french: "tâches par statut",
+        },
+    },
     detailed_task_modal: {
         task_details: {
             english: "Task Details",
