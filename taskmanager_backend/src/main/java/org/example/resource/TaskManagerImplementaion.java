@@ -20,7 +20,6 @@ import org.example.util.Util;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class TaskManagerImplementaion implements TaskManager {
 
@@ -81,6 +80,7 @@ public class TaskManagerImplementaion implements TaskManager {
             .fullname(user.getFullname())
             .email(user.getEmail())
             .bio(user.getBio())
+            .token(Util.createToken(user))
             .build();
     return Response.ok(userData).build();
   }
@@ -134,7 +134,8 @@ public class TaskManagerImplementaion implements TaskManager {
     final var user = userRepository.findByUserID(getUserIdFromToken(authHeader));
     final var taskList =
         taskRepository.getAllTasksByUserId(user).stream().map(TaskEntityMapper::mapToTask).toList();
-    final UserOutput userOutput = UserOutput.builder().taskList(taskList).build();
+    final var userOutput =
+        UserOutput.builder().taskList(taskList).token(Util.createToken(user)).build();
     return Response.ok(userOutput).build();
   }
 
@@ -149,7 +150,9 @@ public class TaskManagerImplementaion implements TaskManager {
         taskRepository.getTaskByIdAndUserId(id, user).stream()
             .map(TaskEntityMapper::mapToTask)
             .toList();
-    return Response.ok(task).build();
+    final TaskList taskList =
+        TaskList.builder().taskList(task).token(Util.createToken(user)).build();
+    return Response.ok(taskList).build();
   }
 
   @Transactional
@@ -162,7 +165,9 @@ public class TaskManagerImplementaion implements TaskManager {
     final TaskEntity taskEntity = TaskEntityMapper.mapToTaskEntity(task, user);
     taskEntity.persist();
     final Task resultTask = TaskEntityMapper.mapToTask(taskEntity);
-    return Response.ok(resultTask).build();
+    final TaskList taskList =
+        TaskList.builder().taskList(List.of(task)).token(Util.createToken(user)).build();
+    return Response.ok(taskList).build();
   }
 
   public Response getTasksSorted(
@@ -182,7 +187,9 @@ public class TaskManagerImplementaion implements TaskManager {
         taskRepository.getSortedTaskList(user, sortValue, direction).stream()
             .map(TaskEntityMapper::mapToTask)
             .toList();
-    return Response.ok(result).build();
+    final TaskList taskList =
+        TaskList.builder().taskList(result).token(Util.createToken(user)).build();
+    return Response.ok(taskList).build();
   }
 
   public Response hello(
@@ -228,10 +235,10 @@ public class TaskManagerImplementaion implements TaskManager {
 
   @Transactional
   public Response updateTask(
-          @HeaderParam("Authorization") final String authHeader,
-          @PathParam("id") final long id,
-          final UpdateTask task)
-          throws ParseException {
+      @HeaderParam("Authorization") final String authHeader,
+      @PathParam("id") final long id,
+      final UpdateTask task)
+      throws ParseException {
     final List<Message> errorList = tokenValidation.validateToken(authHeader);
     if (!errorList.isEmpty()) {
       return Response.ok(errorList).build();
@@ -259,6 +266,8 @@ public class TaskManagerImplementaion implements TaskManager {
     taskEntity.setLastUpdate(LocalDateTime.now());
     taskEntity.persist();
     final Task resultTask = TaskEntityMapper.mapToTask(taskEntity);
-    return Response.ok(resultTask).build();
+    final TaskList taskList =
+        TaskList.builder().taskList(List.of(resultTask)).token(Util.createToken(user)).build();
+    return Response.ok(taskList).build();
   }
 }

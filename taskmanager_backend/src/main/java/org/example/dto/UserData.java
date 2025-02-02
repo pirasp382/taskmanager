@@ -7,5 +7,6 @@ public record UserData(
         String username,
         String fullname,
         String email,
-        String bio
+        String bio,
+        String token
 ) {}
