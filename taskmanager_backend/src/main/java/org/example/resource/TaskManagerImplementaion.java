@@ -166,7 +166,7 @@ public class TaskManagerImplementaion implements TaskManager {
     taskEntity.persist();
     final Task resultTask = TaskEntityMapper.mapToTask(taskEntity);
     final TaskList taskList =
-        TaskList.builder().taskList(List.of(task)).token(Util.createToken(user)).build();
+        TaskList.builder().taskList(List.of(resultTask)).token(Util.createToken(user)).build();
     return Response.ok(taskList).build();
   }
 
