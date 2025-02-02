@@ -10,6 +10,10 @@ public class UserRepository implements PanacheRepository<UserEntity> {
     return find("username", username).firstResult();
   }
 
+  public UserEntity findByUserID(final Long id){
+    return find("id", id).firstResult();
+  }
+
   public UserEntity findByMail(final String email) {
     return find("email", email).firstResult();
   }
