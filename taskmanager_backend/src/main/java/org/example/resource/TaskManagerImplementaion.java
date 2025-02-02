@@ -16,10 +16,7 @@ import org.example.mapper.TaskEntityMapper;
 import org.example.mapper.UserEntiyMapper;
 import org.example.repository.TaskRepository;
 import org.example.repository.UserRepository;
-import org.example.services.validation.LoginValidation;
-import org.example.services.validation.RegistrationValidation;
-import org.example.services.validation.TaskValidation;
-import org.example.services.validation.TokenValidation;
+import org.example.services.validation.*;
 import org.example.util.Util;
 
 import java.time.LocalDateTime;
@@ -97,7 +94,11 @@ public class TaskManagerImplementaion implements TaskManager {
     }
     final var user = userRepository.findByUserID(getUserIdFromToken(authHeader));
     if (profile.getUsername() != null) {
-      user.setUsername(profile.getUsername());
+      if (EditUserValidation.usernameIsUnique(profile.getUsername())) {
+        user.setUsername(profile.getUsername());
+      } else {
+        errorList.add(Message.builder().title("Username already exists").build());
+      }
     }
     if (profile.getPassword() != null) {
       user.setPassword(Util.hashpassword(profile.getPassword()));
@@ -112,9 +113,15 @@ public class TaskManagerImplementaion implements TaskManager {
       user.setAvatarUrl(profile.getAvatarUrl());
     }
     if (profile.getEmail() != null) {
-      user.setEmail(profile.getEmail());
+      if (EditUserValidation.emailIsUnique(profile.getEmail())) {
+        user.setEmail(profile.getEmail());
+      } else {
+        errorList.add(Message.builder().title("Email is not unique").build());
+      }
     }
-    user.persist();
+    if (errorList.isEmpty()) {
+      user.persist();
+    }
     final var userOutput = mapper.mapToLoginOutput(user);
     return Response.ok(userOutput).build();
   }
