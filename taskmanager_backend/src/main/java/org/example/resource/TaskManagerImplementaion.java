@@ -15,6 +15,7 @@ import org.example.mapper.UserEntiyMapper;
 import org.example.repository.TaskRepository;
 import org.example.repository.UserRepository;
 import org.example.services.validation.*;
+import org.example.util.Encryption;
 import org.example.util.Util;
 
 import java.time.LocalDateTime;
@@ -77,8 +78,8 @@ public class TaskManagerImplementaion implements TaskManager {
     final var userData =
         UserData.builder()
             .username(user.getUsername())
-            .fullname(user.getFullname())
-            .email(user.getEmail())
+            .fullname(Encryption.decrypt(user.getFullname(), user.getPassword()))
+            .email(Encryption.decrypt(user.getEmail(), user.getPassword()))
             .bio(user.getBio())
             .token(Util.createToken(user))
             .build();
@@ -107,14 +108,14 @@ public class TaskManagerImplementaion implements TaskManager {
       user.setBio(profile.getBio());
     }
     if (profile.getFullname() != null) {
-      user.setFullname(profile.getFullname());
+      user.setFullname(Encryption.encrypt(profile.getFullname(), user.getPassword()));
     }
     if (profile.getAvatarUrl() != null) {
       user.setAvatarUrl(profile.getAvatarUrl());
     }
     if (profile.getEmail() != null) {
       if (EditUserValidation.emailIsUnique(profile.getEmail())) {
-        user.setEmail(profile.getEmail());
+        user.setEmail(Encryption.encrypt(profile.getEmail(), user.getPassword()));
       } else {
         errorList.add(Message.builder().title("Email is not unique").build());
       }

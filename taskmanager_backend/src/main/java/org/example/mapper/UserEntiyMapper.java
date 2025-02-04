@@ -12,6 +12,7 @@ import org.example.dto.database.UserEntity;
 import org.example.repository.PriorityRepository;
 import org.example.repository.StatusRepository;
 import org.example.repository.TaskRepository;
+import org.example.util.Encryption;
 import org.example.util.Util;
 
 public class UserEntiyMapper {
@@ -21,15 +22,16 @@ public class UserEntiyMapper {
   final TaskRepository taskRepository = new TaskRepository();
 
   public UserEntity mapToUserEntityRegistration(final User user) {
+    final var hashedPassword = Util.hashpassword(user.getPassword());
     return UserEntity.builder()
         .username(user.getUsername())
-        .password(Util.hashpassword(user.getPassword()))
-        .fullname(user.getFullname())
+        .password(hashedPassword)
+        .fullname(Encryption.encrypt(user.getFullname(), hashedPassword))
         .bio(user.getBio())
         .avatarUrl(user.getAvatarUrl())
         .lastLogin(user.getLastLogin())
         .createdAt(getUserCreatedAt(user))
-        .email(user.getEmail())
+        .email(Encryption.encrypt(user.getEmail(), hashedPassword))
         .statuses(statusRepository.getInitalStatusItems())
         .priorities(priorityRepository.getInitalPriorityItems())
         .build();
@@ -44,7 +46,9 @@ public class UserEntiyMapper {
         .statusEntities(
             statusRepository.getAll(userEntity).stream().map(UserEntiyMapper::mapToStatus).toList())
         .priorityEntities(
-            priorityRepository.getAll(userEntity).stream().map(UserEntiyMapper::mapToPriority).toList())
+            priorityRepository.getAll(userEntity).stream()
+                .map(UserEntiyMapper::mapToPriority)
+                .toList())
         .token(Util.createToken(userEntity))
         .taskList(
             taskRepository.getAllTasksByUserId(userEntity).stream()
