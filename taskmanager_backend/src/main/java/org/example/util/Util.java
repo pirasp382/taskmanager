@@ -30,7 +30,7 @@ public class Util {
     return Jwt.subject(Integer.toString(user.getId()))
         .groups("user")
         .claim("username", user.getUsername())
-        .expiresAt(System.currentTimeMillis() + (24 * 3600*1000))
+        .expiresAt(System.currentTimeMillis() + (24 * 3600 * 1000))
         .signWithSecret(key);
   }
 
@@ -45,7 +45,7 @@ public class Util {
         hexString.append(hex);
       }
       return hexString.toString();
-    } catch (NoSuchAlgorithmException e) {
+    } catch (final NoSuchAlgorithmException e) {
       throw new RuntimeException(e);
     }
   }
@@ -54,7 +54,9 @@ public class Util {
     try {
       final byte[] salt = generateSalt();
       final byte[] hash = hashPasswordWithPBKDF2(password, salt);
-      return Base64.getEncoder().encodeToString(salt)+":" + Base64.getEncoder().encodeToString(hash);
+      return Base64.getEncoder().encodeToString(salt)
+          + ":"
+          + Base64.getEncoder().encodeToString(hash);
 
     } catch (final NoSuchAlgorithmException | InvalidKeySpecException e) {
       throw new RuntimeException("Error while hashing password", e);
@@ -104,5 +106,4 @@ public class Util {
     }
     return result == 0;
   }
-
 }
