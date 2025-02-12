@@ -2,6 +2,8 @@ package org.example.util;
 
 import io.smallrye.jwt.build.Jwt;
 import jakarta.inject.Singleton;
+
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -30,6 +32,22 @@ public class Util {
         .claim("username", user.getUsername())
         .expiresAt(System.currentTimeMillis() + (24 * 3600*1000))
         .signWithSecret(key);
+  }
+
+  public static String hashValue(final String input) {
+    try {
+      final MessageDigest digest = MessageDigest.getInstance("SHA-256");
+      final byte[] encodedHash = digest.digest(input.getBytes());
+      final StringBuilder hexString = new StringBuilder();
+      for (final byte b : encodedHash) {
+        final String hex = Integer.toHexString(0xff & b);
+        if (hex.length() == 1) hexString.append('0');
+        hexString.append(hex);
+      }
+      return hexString.toString();
+    } catch (NoSuchAlgorithmException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public static String hashpassword(final String password) {
